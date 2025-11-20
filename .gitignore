@@ -6,7 +6,11 @@
 .pnp.js
 .yarn/install-state.gz
 .env
+.env.local
 
+admin-panel
+./admin-panel
+/admin-panel/node_modules
 # testing
 /coverage
 
