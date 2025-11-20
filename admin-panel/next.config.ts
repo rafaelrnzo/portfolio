@@ -1,6 +1,7 @@
-/** @type {import('next').NextConfig} */
+import type { NextConfig } from "next";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
 let supabaseHostname = "";
 
 try {
@@ -12,9 +13,7 @@ try {
   console.warn("Warning: Invalid NEXT_PUBLIC_SUPABASE_URL in .env");
 }
 
-const nextConfig = {
-  transpilePackages: ["next-mdx-remote"],
-
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {

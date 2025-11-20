@@ -272,3 +272,36 @@ body.modal-open .fixed.bottom-8 {
 .fixed.inset-0.z-\[99999\] {
   z-index: 99999 !important;
 }
+
+@keyframes fadeInUpPage {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page {
+  opacity: 0;
+  animation: fadeInUpPage 0.45s ease-out forwards;
+}
+
+/* Card animation */
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-anim {
+  opacity: 0;
+  animation: cardFadeIn 0.4s ease-out forwards;
+}

@@ -1,10 +1,10 @@
+"use client";
+
 import Container from "@/components/shared/container";
 import Social from "@/components/social";
 import TechBadge from "@/components/tech-badge";
 import Script from "next/script";
 import React from "react";
-import { techGroups } from "../db/type-badge.data";
-import LanguageTools from "@/components/tech-badge";
 
 const structuredData: Record<string, any> = {
   "@context": "https://schema.org",
@@ -37,10 +37,8 @@ const structuredData: Record<string, any> = {
     "Nest.js",
     "TypeScript",
     "Python",
-    "Jupyter Notebooks",
     "FastAPI",
     "ERPNext (Frappe)",
-    "Developer Frappe",
     "RAG",
     "Docker",
   ],
@@ -58,38 +56,32 @@ export default function About() {
   ];
 
   return (
-    <Container size="large" className="prose prose-zinc container animate-enter">
-      <p className="text-lg font-medium tracking-tight mb-8">
+    <Container size="large" className="prose prose-zinc container animate-page">
+      
+      <p className="text-lg font-medium tracking-tight mb-8 fade-item">
         Hi 👋, I&apos;m Rafael Lorenzo.
       </p>
 
       {paragraphs.map((paragraph, index) => (
-        <div
+        <p
           key={index}
-          style={
-            { "--stagger": index } as React.CSSProperties & { [key: string]: number }
-          }
+          className="text-[15px] leading-relaxed opacity-85 fade-item"
+          style={{ animationDelay: `${(index + 1) * 150}ms` }}
         >
-          <p
-            className={`text-[15px] leading-relaxed opacity-85 ${index === paragraphs.length - 1 ? "mb-8" : "mb-6"
-              }`}
-          >
-            {paragraph}
-          </p>
-        </div>
+          {paragraph}
+        </p>
       ))}
 
-
-      <div className="">
+      <div className="mt-8 fade-item" style={{ animationDelay: "450ms" }}>
         <p className="text-md font-medium">Language & Tools</p>
         <TechBadge />
       </div>
 
-      <div className="">
+      <div className="mt-6 fade-item" style={{ animationDelay: "600ms" }}>
         <p className="text-md font-medium">Find Me!</p>
         <Social />
       </div>
-      
+
       <Script
         id="structured-data"
         type="application/ld+json"

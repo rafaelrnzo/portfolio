@@ -1,75 +1,86 @@
+"use client";
+
 import Container from "@/components/shared/container";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase-client";
 
 type WorkItem = {
   company: string;
   role: string;
   period: string;
-  summary: React.ReactNode;
-  bullets: React.ReactNode[];
+  summary: string;
+  bullets: string[];
 };
 
-const workItems: WorkItem[] = [
-  {
-    company: "PT Falah Inovasi Teknologi",
-    role: "Backend Developer",
-    period: "Jul 2024 - Present",
-    summary:
-      "PT Falah Inovasi Teknologi is a fast-growing technology company dedicated to delivering robust ERP, AI, and enterprise solutions for modern businesses. My role focuses on building scalable backend architectures, integrating AI automation, and streamlining system reliability across deployments.",
-    bullets: [
-      "Engineered RESTful APIs and backend modules within ERPNext (Frappe) and FastAPI ecosystems to support multi-tenant enterprise systems.",
-      "Integrated AI-driven services for document summarization, content generation, and intelligent automation workflows using Python.",
-      "Managed Linux-based server environments, ensuring high availability and secure deployment of AI and ERP applications.",
-      "Containerized environments with Docker and orchestrated Git-based CI/CD workflows for consistent releases.",
-      "Collaborated with cross-functional teams to improve system scalability, reduce latency, and ensure smooth delivery pipelines.",
-    ],
-  },
-  {
-    company: "Lantech",
-    role: "Founder",
-    period: "Mar 2025 - Present",
-    summary:
-      "Lantech is an independent digital studio I founded to provide tailor-made software and design solutions for startups, education, and creative industries. The mission is to combine technology and design to create meaningful user experiences with lasting impact.",
-    bullets: [
-      "Led multidisciplinary teams to deliver web and mobile projects, including online exam platforms and learning games for children with special needs.",
-      "Oversaw the entire product lifecycle from ideation and prototyping to launch and maintenance ensuring on-time and high-quality delivery.",
-      "Designed scalable UI systems and optimized Git workflows for collaborative development and rapid iteration.",
-      "Balanced technical execution with client relations, ensuring transparent communication and long-term satisfaction.",
-    ],
-  },
-  {
-    company: "Upwork",
-    role: "Freelance UI/UX Designer",
-    period: "Aug 2023 - Jul 2024",
-    summary:
-      "As an independent designer on Upwork, I collaborated with international clients to craft visually engaging, accessible, and responsive user interfaces that elevate brand identity and usability.",
-    bullets: [
-      "Delivered end-to-end UI/UX projects, transforming client visions into intuitive designs through Figma and iterative user feedback.",
-      "Created reusable design systems using Auto Layout and Components to enhance scalability across products.",
-      "Applied user-centered design principles to optimize layouts, accessibility, and overall user flow.",
-      "Maintained close communication with clients, providing design recommendations and refining outputs based on usability testing.",
-    ],
-  },
-  {
-    company: "PT Solusi Intek Indonesia",
-    role: "Mobile Developer & UI/UX Designer",
-    period: "Oct 2022 - Apr 2023",
-    summary:
-      "PT Solusi Intek Indonesia specializes in industrial automation and technology integration. I contributed to building cross-platform mobile and IoT solutions that merge design thinking with technical precision.",
-    bullets: [
-      "Designed interactive mobile interfaces wireframes, flows, and layouts to deliver seamless user experiences.",
-      "Developed hybrid applications using React Native and Flutter with consistent component patterns.",
-      "Built IoT features for real-time robot control and parameter monitoring via MQTT and Bluetooth communication.",
-      "Worked closely with engineers and designers to align UX goals with system constraints for reliable, efficient deployments.",
-    ],
-  },
-];
+type ExperienceRow = {
+  id: string;
+  company: string | null;
+  role: string | null;
+  from: string | null; 
+  to: string | null;
+  summary: string | null;
+  bullets: string[] | null;
+  company_link: string | null;
+};
+
+function formatMonthYear(dateStr: string | null): string | null {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) {
+    return dateStr;
+  }
+  return d.toLocaleString("en-US", { month: "short", year: "numeric" });
+}
+
+function buildPeriod(from: string | null, to: string | null): string {
+  const fromLabel = formatMonthYear(from);
+  const toLabel = to ? formatMonthYear(to) : "Present";
+
+  if (fromLabel && toLabel) return `${fromLabel} - ${toLabel}`;
+  if (fromLabel && !toLabel) return fromLabel;
+  if (!fromLabel && toLabel) return toLabel;
+  return "";
+}
 
 export default function Work() {
+  const [workItems, setWorkItems] = useState<WorkItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      const { data, error } = await supabase
+        .from("experiences")
+        .select('id, company, role, "from", "to", summary, bullets, company_link')
+        .order("from", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        setError(error.message);
+        setLoading(false);
+        return;
+      }
+
+      const mapped: WorkItem[] =
+        (data ?? []).map((row) => ({
+          company: row.company ?? "",
+          role: row.role ?? "",
+          period: buildPeriod(row.from, row.to),
+          summary: row.summary ?? "",
+          bullets: (row.bullets ?? []) as string[],
+        })) ?? [];
+
+      setWorkItems(mapped);
+      setLoading(false);
+    };
+
+    fetchExperiences();
+  }, []);
+
   return (
-    <Container size="large">
+    <Container size="large" className="animate-page">
       <main className="prose prose-neutral">
-        <header>
+        <header className="mb-8 fade-item" style={{ animationDelay: "80ms" }}>
           <p className="text-[15px] leading-relaxed opacity-80">
             On a mission to craft software that blends design, intelligence, and
             reliability. Below is an overview of my professional journey each
@@ -78,32 +89,76 @@ export default function Work() {
           </p>
         </header>
 
-        <section>
-          {workItems.map((item) => (
-            <article key={item.company} className="mb-12">
-              <header className="mb-4">
-                <h2 className="font-medium text-xl mb-1 tracking-tight">
-                  {item.company}
-                </h2>
-                <time className="opacity-60 text-[15px] tracking-tight flex items-center gap-2">
-                  <span>{item.role}</span>
-                  <span className="text-xs">•</span>
-                  <span>{item.period}</span>
-                </time>
+        <section className="space-y-8">
+          {/* Skeleton saat loading */}
+          {loading && !error && (
+            <div className="space-y-8">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-xl border border-foreground/5 p-4 animate-pulse"
+                >
+                  <div className="h-4 w-40 rounded bg-foreground/10 mb-2" />
+                  <div className="h-3 w-56 rounded bg-foreground/10 mb-4" />
+                  <div className="h-3 w-full rounded bg-foreground/10 mb-2" />
+                  <div className="h-3 w-5/6 rounded bg-foreground/10 mb-2" />
+                  <div className="h-3 w-2/3 rounded bg-foreground/10" />
+                </div>
+              ))}
+            </div>
+          )}
 
-              </header>
+          {/* Error state */}
+          {error && (
+            <p className="text-[15px] text-red-500">
+              Failed to load experiences: {error}
+            </p>
+          )}
 
-              <p className="text-[15px] leading-relaxed opacity-80">
-                {item.summary}
-              </p>
+          {/* Konten utama */}
+          {!loading &&
+            !error &&
+            workItems.map((item, index) => (
+              <article
+                key={`${item.company}-${item.period}-${index}`}
+                className="mb-4 fade-item"
+                // tanpa stagger besar, biar lebih halus
+                style={{ animationDelay: "120ms" }}
+              >
+                <header className="mb-3">
+                  <h2 className="font-medium text-xl mb-1 tracking-tight">
+                    {item.company}
+                  </h2>
+                  <time className="opacity-60 text-[15px] tracking-tight flex items-center gap-2">
+                    <span>{item.role}</span>
+                    {item.period && (
+                      <>
+                        <span className="text-xs">•</span>
+                        <span>{item.period}</span>
+                      </>
+                    )}
+                  </time>
+                </header>
 
-              <ul className="text-[15px] leading-relaxed opacity-80">
-                {item.bullets.map((b, i) => (
-                  <li key={i}>{b}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+                <p className="text-[15px] leading-relaxed opacity-80">
+                  {item.summary}
+                </p>
+
+                {item.bullets.length > 0 && (
+                  <ul className="text-[15px] leading-relaxed opacity-80 mt-3">
+                    {item.bullets.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            ))}
+
+          {!loading && !error && workItems.length === 0 && (
+            <p className="text-[15px] opacity-70">
+              Belum ada experience di Supabase.
+            </p>
+          )}
         </section>
       </main>
     </Container>
