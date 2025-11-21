@@ -19,7 +19,7 @@ type SkillRelation = {
 };
 
 type TechStackRow = {
-  skills: SkillRelation | null; 
+  skills: SkillRelation | null;
 };
 
 type ProjectRow = {
@@ -30,7 +30,7 @@ type ProjectRow = {
   git_link: string | null;
   demo_link: string | null;
   created_at: string;
-  project_tech_stacks: TechStackRow[]; 
+  project_tech_stacks: TechStackRow[];
 };
 
 export default function ProjectsPage() {
@@ -83,14 +83,22 @@ export default function ProjectsPage() {
           return {
             title: row.title ?? "",
             description: row.description ?? "",
-            tech, 
+            tech,
             href: row.demo_link ?? undefined,
             repo: row.git_link ?? undefined,
             imageSrc: row.thumbnail ?? undefined,
           };
         });
 
-        setProjects(mapped);
+        // 🟢 Prioritaskan project yang punya imageSrc di paling atas
+        const withImage = mapped.filter(
+          (p) => p.imageSrc && p.imageSrc.trim().length > 0
+        );
+        const withoutImage = mapped.filter(
+          (p) => !p.imageSrc || p.imageSrc.trim().length === 0
+        );
+
+        setProjects([...withImage, ...withoutImage]);
       } catch (err: any) {
         console.error("Error fetching projects:", err);
         setErrorMsg(err.message || "Unknown error");
@@ -175,7 +183,7 @@ export default function ProjectsPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="rounded-lg border border-foreground/10 px-3 py-2 text-[14px] text-foreground/80 transition hover:bg-foreground/[0.02] hover:border-foreground/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-lg border border-foreground/10 px-3 py-1.5 text-[14px] text-foreground/80 transition hover:bg-foreground/[0.02] hover:border-foreground/20 disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Previous projects"
           >
             ← Previous
@@ -188,7 +196,7 @@ export default function ProjectsPage() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="rounded-lg border border-foreground/10 px-3 py-2 text-[14px] text-foreground/80 transition hover:bg-foreground/[0.02] hover:border-foreground/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-lg border border-foreground/10 px-3 py-1.5 text-[14px] text-foreground/80 transition hover:bg-foreground/[0.02] hover:border-foreground/20 disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Next projects"
           >
             Next →

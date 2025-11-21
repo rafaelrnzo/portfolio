@@ -104,7 +104,7 @@ export default function ProjectCard({
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 ">
+          <div className="flex flex-col gap-4 ">
             <span className="h-auto text-sm leading-relaxed text-foreground/80">
               {description}
             </span>
