@@ -46,10 +46,10 @@ export default function Social() {
           <span className="ml-3 text-[15px] tracking-tight">Read CV</span>
         </div>
       </SocialButton>
-      <SocialButton href="https://youtube.com/@onurhandev">
+      <SocialButton href="https://instagram.com/rafaelrnzo">
         <div className="flex flex-row items-center">
           <IconDribbble />
-          <span className="ml-3 text-[15px] tracking-tight">Dribble</span>
+          <span className="ml-3 text-[15px] tracking-tight">Instagram</span>
         </div>
       </SocialButton>
     </div>
