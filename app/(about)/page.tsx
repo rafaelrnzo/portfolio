@@ -51,7 +51,7 @@ const structuredData: Record<string, any> = {
 
 export default function About() {
   const paragraphs = [
-    "I’m Rafael Lorenzo a Software Engineer passionate about building user focused products that merge clean design with reliable backend systems. I work across React, Next.js, FastAPI, and ERPNext (Frappe) to craft web and AI-powered applications that feel smooth, efficient, and meaningful to use.",
+    "i'm a Software Engineer passionate about building user focused products that merge clean design with reliable backend systems. I work across React, Next.js, FastAPI, and ERPNext (Frappe) to craft web and AI-powered applications that feel smooth, efficient, and meaningful to use.",
     "I enjoy exploring how design, data, and AI can simplify complex workflows. Whether it’s integrating retrieval-based automation or refining interfaces, my goal is to create technology that feels human thoughtful, accessible, and built to last.",
   ];
 

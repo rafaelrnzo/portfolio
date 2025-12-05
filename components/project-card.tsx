@@ -113,7 +113,7 @@ export default function ProjectCard({
               {tech.map((t) => (
                 <div
                   key={t}
-                  className="flex w-full md:w-auto items-center justify-between border border-foreground/10 rounded-lg px-4 py-1 hover:bg-foreground/[0.02] hover:border-foreground/20 transition-all group"
+                  className="flex w-auto items-center justify-between border border-foreground/10 rounded-lg px-4 py-1 hover:bg-foreground/[0.02] hover:border-foreground/20 transition-all group"
                 >
                   <div className="flex flex-row items-center">
                     <span className="text-sm tracking-tight text-foreground/80 group-hover:text-foreground">
