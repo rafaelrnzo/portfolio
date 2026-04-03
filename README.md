@@ -30,16 +30,19 @@ https://onurhan.dev
 
 ## Running Locally
 
-This application requires Node.js v16.13+.
+This application requires Node.js 22.x.
 
 ```bash
 git clone https://github.com/onurhan1337/my-website.git
 cd my-website
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example). You don't need to fill them out for the site to work. However, it is required to be able to use the [Upstash/Claps](https://github.com/upstash/claps) package.
+Create a `.env` file similar to `.env.example`.
+
+- `DATABASE_URL` is required to load dynamic content (projects/skills/experiences) from Neon Postgres.
+- The `UPSTASH_*` vars are only required if you want the claps feature.
 
 ## Cloning / Forking
 

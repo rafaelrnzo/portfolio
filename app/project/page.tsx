@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Container from "@/components/shared/container";
 import ProjectCard from "@/components/project-card";
-import { supabase } from "@/lib/supabase-client";
 
 type Project = {
   title: string;
@@ -30,7 +29,7 @@ type ProjectRow = {
   git_link: string | null;
   demo_link: string | null;
   created_at: string;
-  project_tech_stacks: TechStackRow[];
+  tech: string[];
 };
 
 export default function ProjectsPage() {
@@ -49,41 +48,21 @@ export default function ProjectsPage() {
       setErrorMsg(null);
 
       try {
-        const { data, error } = await supabase
-          .from("projects")
-          .select(
-            `
-            id,
-            title,
-            thumbnail,
-            description,
-            git_link,
-            demo_link,
-            created_at,
-            project_tech_stacks (
-              skills (
-                skill
-              )
-            )
-          `
-          )
-          .order("created_at", { ascending: false })
-          .returns<ProjectRow[]>();
-
-        if (error) {
-          throw error;
+        const res = await fetch("/api/projects", { cache: "no-store" });
+        if (!res.ok) {
+          const body = (await res.json().catch(() => null)) as
+            | { error?: string }
+            | null;
+          throw new Error(body?.error || `HTTP ${res.status}`);
         }
 
-        const mapped: Project[] = (data || []).map((row) => {
-          const tech =
-            row.project_tech_stacks
-              ?.map((pts) => pts.skills?.skill)
-              .filter((s): s is string => typeof s === "string") ?? [];
+        const data = (await res.json()) as ProjectRow[];
 
+        const mapped: Project[] = (data || []).map((row) => {
           return {
             title: row.title ?? "",
             description: row.description ?? "",
-            tech,
+            tech: row.tech ?? [],
             href: row.demo_link ?? undefined,
             repo: row.git_link ?? undefined,
             imageSrc: row.thumbnail ?? undefined,

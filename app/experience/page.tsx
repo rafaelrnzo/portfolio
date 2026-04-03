@@ -2,7 +2,6 @@
 
 import Container from "@/components/shared/container";
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase-client";
 
 type WorkItem = {
   company: string;
@@ -19,7 +18,7 @@ type ExperienceRow = {
   from: string | null; 
   to: string | null;
   summary: string | null;
-  bullets: string[] | null;
+  bullets: string[];
   company_link: string | null;
 };
 
@@ -49,29 +48,33 @@ export default function Work() {
 
   useEffect(() => {
     const fetchExperiences = async () => {
-      const { data, error } = await supabase
-        .from("experiences")
-        .select('id, company, role, "from", "to", summary, bullets, company_link')
-        .order("from", { ascending: false });
+      try {
+        const res = await fetch("/api/experiences", { cache: "no-store" });
+        if (!res.ok) {
+          const body = (await res.json().catch(() => null)) as
+            | { error?: string }
+            | null;
+          throw new Error(body?.error || `HTTP ${res.status}`);
+        }
 
-      if (error) {
-        console.error(error);
-        setError(error.message);
+        const data = (await res.json()) as ExperienceRow[];
+
+        const mapped: WorkItem[] =
+          (data ?? []).map((row) => ({
+            company: row.company ?? "",
+            role: row.role ?? "",
+            period: buildPeriod(row.from, row.to),
+            summary: row.summary ?? "",
+            bullets: row.bullets ?? [],
+          })) ?? [];
+
+        setWorkItems(mapped);
+      } catch (err: any) {
+        console.error(err);
+        setError(err?.message || "Failed to load experiences");
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const mapped: WorkItem[] =
-        (data ?? []).map((row) => ({
-          company: row.company ?? "",
-          role: row.role ?? "",
-          period: buildPeriod(row.from, row.to),
-          summary: row.summary ?? "",
-          bullets: (row.bullets ?? []) as string[],
-        })) ?? [];
-
-      setWorkItems(mapped);
-      setLoading(false);
     };
 
     fetchExperiences();
@@ -156,7 +159,7 @@ export default function Work() {
 
           {!loading && !error && workItems.length === 0 && (
             <p className="text-[15px] opacity-70">
-              Belum ada experience di Supabase.
+              Belum ada experience.
             </p>
           )}
         </section>

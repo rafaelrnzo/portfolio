@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import IconGithub from "@/components/shared/icons/github";
@@ -40,16 +39,11 @@ export default function ProjectCard({
                 md:min-h-full memastikan container gambar merenggang mengikuti teks di sebelahnya.
             */}
             <div className="relative w-full overflow-hidden aspect-[16/9] md:aspect-auto md:h-full md:min-h-[220px]">
-              <Image
+              <img
                 src={imageSrc!}
                 alt={imageAlt}
-                fill
-                // UPDATE: Ditambahkan 'object-top'
-                // 'object-cover': Memastikan gambar full tanpa gepeng
-                // 'object-top': Memastikan gambar di-crop dari bawah (atas selalu kelihatan)
-                className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
-                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 40vw, 34vw"
-                priority={false}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
               />
             </div>
           </div>

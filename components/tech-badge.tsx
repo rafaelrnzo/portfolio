@@ -1,6 +1,5 @@
 "use client";
 
-import { supabase } from "@/lib/supabase-client";
 import React, { useEffect, useState } from "react";
 
 type ToolButtonProps = {
@@ -30,19 +29,21 @@ export default function TechBadge() {
     const fetchSkills = async () => {
       setLoading(true);
 
-      const { data, error } = await supabase
-        .from("skills")
-        .select("id, skill")
-        .order("created_at", { ascending: true });
-
-      if (error) {
-        console.error("Error fetching skills:", error);
+      try {
+        const res = await fetch("/api/skills", { cache: "no-store" });
+        if (!res.ok) {
+          const body = (await res.json().catch(() => null)) as
+            | { error?: string }
+            | null;
+          throw new Error(body?.error || `HTTP ${res.status}`);
+        }
+        const data = (await res.json()) as Array<{ id: string; skill: string }>;
+        setSkills(data || []);
+      } catch (err) {
+        console.error("Error fetching skills:", err);
+      } finally {
         setLoading(false);
-        return;
       }
-
-      setSkills(data || []);
-      setLoading(false);
     };
 
     fetchSkills();
