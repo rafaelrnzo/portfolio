@@ -13,8 +13,8 @@ import {
   ChannelSimulator,
   UnbufferedChannelDemo,
   RealtimeAudioFlow,
-} from "./interactive-components";
-import { CodePlayground } from "./interactive-components/code-playground";
+  CodePlayground,
+} from "./mdx-client-components";
 
 interface TableData {
   headers: string[];
@@ -94,8 +94,35 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />;
 }
 
-function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  return <Image {...props} className="rounded-lg" />;
+function RoundedImage({
+  alt = "",
+  className,
+  ...props
+}: React.ComponentProps<typeof Image>) {
+  return <Image {...props} alt={alt} className={`rounded-lg ${className ?? ""}`} />;
+}
+
+function MarkdownImage({
+  src = "",
+  alt = "",
+  width,
+  height,
+}: React.ImgHTMLAttributes<HTMLImageElement>) {
+  if (typeof src !== "string" || !src) {
+    return null;
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={Number(width) || 1200}
+      height={Number(height) || 675}
+      sizes="100vw"
+      className="rounded-lg"
+      style={{ width: "100%", height: "auto" }}
+    />
+  );
 }
 
 function Callout({ children }: { children: React.ReactNode }) {
@@ -290,6 +317,7 @@ const components = {
   h5: createHeading(5),
   h6: createHeading(6),
   a: CustomLink,
+  img: MarkdownImage,
   Image: RoundedImage,
   Callout,
   ProsCard,

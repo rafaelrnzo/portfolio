@@ -1,10 +1,9 @@
-  "use client";
-
   import Container from "@/components/shared/container";
   import Social from "@/components/social";
   import TechBadge from "@/components/tech-badge";
   import Script from "next/script";
-  import React from "react";
+
+  export const revalidate = 3600;
 
   const structuredData: Record<string, any> = {
     "@context": "https://schema.org",

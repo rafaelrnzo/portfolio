@@ -40,7 +40,7 @@ export default function Social() {
           <span className="ml-3 text-[15px] tracking-tight">Github</span>
         </div>
       </SocialButton>
-      <SocialButton href="https://drive.google.com/file/d/1FCJIOt6NjRFMGGobz_BA-0-f1BpKj3T_/view?usp=sharing">
+      <SocialButton href="https://drive.google.com/file/d/1Y4mdX2ICbP1yIOtgpTr9sYtmHneO5QDr/view?usp=sharing">
         <div className="flex flex-row items-center">
           <IconCv />
           <span className="ml-3 text-[15px] tracking-tight">Read CV</span>

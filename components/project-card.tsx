@@ -1,9 +1,9 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import IconGithub from "@/components/shared/icons/github";
 import IconArrowRightUp from "@/components/shared/icons/arrow-right-up";
+import { optimizeProjectImageSrc } from "@/lib/project-image.mjs";
 
 type ProjectCardProps = {
   title: string;
@@ -13,6 +13,7 @@ type ProjectCardProps = {
   repo?: string;
   imageSrc?: string;
   imageAlt?: string;
+  imagePriority?: boolean;
 };
 
 export default function ProjectCard({
@@ -23,8 +24,10 @@ export default function ProjectCard({
   repo,
   imageSrc,
   imageAlt = `${title} preview`,
+  imagePriority = false,
 }: ProjectCardProps) {
   const hasImage = Boolean(imageSrc && imageSrc.trim().length > 0);
+  const optimizedImageSrc = hasImage ? optimizeProjectImageSrc(imageSrc!) : "";
 
   return (
     <article className="group relative overflow-hidden rounded-xl border border-foreground/10 bg-background/50 transition-all hover:border-foreground/20 hover:bg-foreground/[0.02]">
@@ -39,10 +42,12 @@ export default function ProjectCard({
                 md:min-h-full memastikan container gambar merenggang mengikuti teks di sebelahnya.
             */}
             <div className="relative w-full overflow-hidden aspect-[16/9] md:aspect-auto md:h-full md:min-h-[220px]">
-              <img
-                src={imageSrc!}
+              <Image
+                src={optimizedImageSrc}
                 alt={imageAlt}
-                loading="lazy"
+                fill
+                priority={imagePriority}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 40vw, 34vw"
                 className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
               />
             </div>

@@ -1,9 +1,12 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import { getDb } from "@/lib/db";
 
 type ToolButtonProps = {
   label: string;
+};
+
+type SkillItem = {
+  id: string;
+  skill: string | null;
 };
 
 export function ToolButton({ label }: ToolButtonProps) {
@@ -16,53 +19,23 @@ export function ToolButton({ label }: ToolButtonProps) {
   );
 }
 
-type SkillItem = {
-  id: string;
-  skill: string;
-};
+async function getSkills(): Promise<SkillItem[]> {
+  const db = getDb();
+  return (await db`
+    select id, skill
+    from skills
+    order by created_at asc nulls last, skill asc
+  `) as SkillItem[];
+}
 
-export default function TechBadge() {
-  const [skills, setSkills] = useState<SkillItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      setLoading(true);
-
-      try {
-        const res = await fetch("/api/skills", { cache: "no-store" });
-        if (!res.ok) {
-          const body = (await res.json().catch(() => null)) as
-            | { error?: string }
-            | null;
-          throw new Error(body?.error || `HTTP ${res.status}`);
-        }
-        const data = (await res.json()) as Array<{ id: string; skill: string }>;
-        setSkills(data || []);
-      } catch (err) {
-        console.error("Error fetching skills:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSkills();
-  }, []);
+export default async function TechBadge() {
+  const skills = await getSkills();
 
   return (
     <div className="flex flex-row flex-wrap gap-2">
-      {loading &&
-        Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="w-20 h-7 rounded-lg bg-foreground/10 animate-pulse"
-          />
-        ))}
-
-      {!loading &&
-        skills.map((item) => (
-          <ToolButton key={item.id} label={item.skill} />
-        ))}
+      {skills.map((item) => (
+        <ToolButton key={item.id} label={item.skill ?? ""} />
+      ))}
     </div>
   );
 }
