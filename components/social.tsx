@@ -46,6 +46,12 @@ export default function Social() {
           <span className="ml-3 text-[15px] tracking-tight">Read CV</span>
         </div>
       </SocialButton>
+      <SocialButton href="https://drive.google.com/file/d/1bUkRaAY_SHbVqguG-UrLUz9I3A93vYP-/view?usp=sharing">
+        <div className="flex flex-row items-center">
+          <IconCv />
+          <span className="ml-3 text-[15px] tracking-tight">Read CV 2</span>
+        </div>
+      </SocialButton>
       <SocialButton href="https://instagram.com/rafaelrnzo">
         <div className="flex flex-row items-center">
           <IconDribbble />
