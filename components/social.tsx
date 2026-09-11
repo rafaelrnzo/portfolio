@@ -43,7 +43,7 @@ export default function Social() {
       <SocialButton href="https://drive.google.com/file/d/1Y4mdX2ICbP1yIOtgpTr9sYtmHneO5QDr/view?usp=sharing">
         <div className="flex min-w-0 flex-row items-center">
           <IconCv />
-          <span className="ml-2 truncate text-[14px] tracking-tight">Read CV</span>
+          <span className="ml-2 truncate text-[14px] tracking-tight">CV</span>
         </div>
       </SocialButton>
       <SocialButton href="https://drive.google.com/file/d/1bUkRaAY_SHbVqguG-UrLUz9I3A93vYP-/view?usp=sharing">
@@ -55,7 +55,7 @@ export default function Social() {
       <SocialButton href="https://instagram.com/rafaelrnzo">
         <div className="flex min-w-0 flex-row items-center">
           <IconDribbble />
-          <span className="ml-2 truncate text-[14px] tracking-tight">Instagram</span>
+          <span className="ml-2 truncate text-[14px] tracking-tight">IG</span>
         </div>
       </SocialButton>
     </div>
