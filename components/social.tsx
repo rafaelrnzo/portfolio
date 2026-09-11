@@ -14,7 +14,7 @@ function SocialButton({ href, children }: SocialButtonProps) {
       rel="noopener noreferrer"
       target="_blank"
       passHref
-      className="flex w-full border border-foreground/10 rounded-lg p-4 no-underline items-center hover:bg-foreground/[0.02] hover:border-foreground/20 transition-all justify-between group"
+      className="inline-flex min-h-11 w-full items-center justify-between gap-3 whitespace-nowrap rounded-full border border-foreground/10 px-4 py-2.5 no-underline transition-all hover:border-foreground/20 hover:bg-foreground/[0.02] sm:w-auto group"
     >
       {children}
       <div className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -26,7 +26,7 @@ function SocialButton({ href, children }: SocialButtonProps) {
 
 export default function Social() {
   return (
-    <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
 
       <SocialButton href="https://www.linkedin.com/in/rafael-lorenzo25/">
         <div className="flex flex-row items-center">
@@ -49,7 +49,7 @@ export default function Social() {
       <SocialButton href="https://drive.google.com/file/d/1bUkRaAY_SHbVqguG-UrLUz9I3A93vYP-/view?usp=sharing">
         <div className="flex flex-row items-center">
           <IconCv />
-          <span className="ml-3 text-[15px] tracking-tight">Read CV 2</span>
+          <span className="ml-3 text-[15px] tracking-tight">CV Portfolio</span>
         </div>
       </SocialButton>
       <SocialButton href="https://instagram.com/rafaelrnzo">
